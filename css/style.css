@@ -1046,15 +1046,15 @@ footer p {
     background: rgba(10,10,11,0.97);
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    gap: 28px;
-    padding: calc(var(--nav-height) + 32px) 24px 40px;
+    justify-content: center;
+    gap: 20px;
+    padding: var(--nav-height) 24px 24px;
     z-index: 105;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
   .nav-links.open { display: flex; }
-  .nav-links a { font-size: 20px; }
+  .nav-links a { font-size: 18px; }
   .nav-toggle { display: block; }
   .nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
   .nav-toggle.active span:nth-child(2) { opacity: 0; }
