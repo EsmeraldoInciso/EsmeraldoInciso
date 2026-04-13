@@ -580,6 +580,7 @@ nav.scrolled { background: rgba(10,10,11,0.92); }
 .mockup-rs { background: linear-gradient(135deg, #2a1a1a, #3d2222, #4f2e2e); }
 .mockup-kt { background: linear-gradient(135deg, #1a1a2e, #2d1a3e, #3e1a4f); }
 .mockup-tm { background: linear-gradient(135deg, #1a2e1a, #1e3a2a, #1a3e30); }
+.mockup-im { background: linear-gradient(135deg, #2a2418, #3a3220, #4a3d25); }
 
 /* Project external link */
 .project-link {
