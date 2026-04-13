@@ -88,4 +88,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', activateNav, { passive: true });
 
+
+  // ─── Portrait Mouse Parallax ───
+  const portraitFrame = document.querySelector('.portrait-frame');
+  const portraitImg   = portraitFrame?.querySelector('.portrait-img');
+  const portraitRing  = portraitFrame?.querySelector('.portrait-grid-lines');
+
+  if (portraitFrame && portraitImg && window.matchMedia('(pointer: fine)').matches) {
+    portraitFrame.addEventListener('mousemove', (e) => {
+      const rect = portraitFrame.getBoundingClientRect();
+      const nx = (e.clientX - rect.left) / rect.width  - 0.5;
+      const ny = (e.clientY - rect.top)  / rect.height - 0.5;
+      const maxShift = 10;
+
+      portraitImg.style.transform =
+        `translate3d(calc(-50% + ${nx * maxShift}px), ${ny * maxShift}px, 0)`;
+
+      if (portraitRing) {
+        portraitRing.style.transform = `translate3d(${nx * -6}px, ${ny * -6}px, 0)`;
+      }
+    });
+
+    portraitFrame.addEventListener('mouseleave', () => {
+      portraitImg.style.transform = 'translate3d(-50%, 0, 0)';
+      if (portraitRing) portraitRing.style.transform = '';
+    });
+  }
+
 });

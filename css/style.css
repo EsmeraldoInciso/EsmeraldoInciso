@@ -388,6 +388,15 @@ nav.scrolled { background: rgba(10,10,11,0.92); }
   border: 1px solid rgba(255,255,255,0.06);
   overflow: hidden;
   box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out), border-color 0.5s;
+  will-change: transform;
+}
+.portrait-frame:hover {
+  transform: translateY(-6px);
+  border-color: rgba(201,242,107,0.18);
+  box-shadow:
+    0 40px 100px rgba(0,0,0,0.55),
+    0 0 50px rgba(201,242,107,0.12);
 }
 .portrait-glow {
   position: absolute;
@@ -395,23 +404,43 @@ nav.scrolled { background: rgba(10,10,11,0.92); }
   aspect-ratio: 1;
   bottom: -20%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(0.9);
   background: radial-gradient(circle, rgba(201,242,107,0.35) 0%, transparent 70%);
   filter: blur(40px);
   pointer-events: none;
   z-index: 0;
+  opacity: 0;
+  transition: opacity 1.4s ease;
 }
+.about-portrait.visible .portrait-glow {
+  opacity: 1;
+  animation: glowPulse 5s ease-in-out infinite 1s;
+}
+@keyframes glowPulse {
+  0%, 100% { transform: translateX(-50%) scale(0.9); opacity: 0.85; }
+  50%      { transform: translateX(-50%) scale(1.08); opacity: 1; }
+}
+
 .portrait-grid-lines {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(201,242,107,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201,242,107,0.06) 1px, transparent 1px);
-  background-size: 36px 36px;
-  mask-image: radial-gradient(circle at 50% 60%, black 30%, transparent 75%);
-  -webkit-mask-image: radial-gradient(circle at 50% 60%, black 30%, transparent 75%);
+  background:
+    conic-gradient(from 200deg at 50% 60%,
+      rgba(201,242,107,0.18) 0deg,
+      transparent 80deg,
+      rgba(107,181,242,0.14) 180deg,
+      transparent 260deg,
+      rgba(201,242,107,0.18) 360deg);
+  mask-image: radial-gradient(circle at 50% 60%, transparent 32%, black 48%, transparent 82%);
+  -webkit-mask-image: radial-gradient(circle at 50% 60%, transparent 32%, black 48%, transparent 82%);
+  filter: blur(2px);
   pointer-events: none;
   z-index: 0;
+  animation: ringRotate 28s linear infinite;
+}
+@keyframes ringRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 .portrait-img {
   position: absolute;
@@ -426,6 +455,8 @@ nav.scrolled { background: rgba(10,10,11,0.92); }
   image-rendering: -webkit-optimize-contrast;
   backface-visibility: hidden;
   filter: saturate(0.95) contrast(1.02);
+  transition: transform 0.25s var(--ease-out);
+  will-change: transform;
 }
 
 .about-text p {
