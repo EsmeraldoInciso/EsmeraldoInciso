@@ -521,6 +521,88 @@
     </div>
   </footer>
 
+  <!-- ═══════════════ Portfolio AI Chatbot ═══════════════ -->
+<div class="ai-chat" id="aiChat">
+
+  <div class="ai-chat-panel" id="aiChatPanel">
+
+    <div class="ai-chat-header">
+
+      <div>
+        <div class="ai-chat-title">Ask Don's AI</div>
+        <div class="ai-chat-status">
+          <span></span> Portfolio Assistant
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="ai-chat-close"
+        id="aiChatClose"
+        aria-label="Close chat"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      class="ai-chat-messages"
+      id="aiChatMessages"
+    >
+
+      <div class="ai-message ai-bot-message">
+
+        <div class="ai-message-label">
+          DON.AI
+        </div>
+
+        <div class="ai-message-bubble">
+          Hi! I'm Don's portfolio assistant. Ask me about
+          his skills, projects, experience, or technologies.
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <form
+      class="ai-chat-form"
+      id="aiChatForm"
+    >
+
+      <textarea
+        id="aiChatInput"
+        rows="1"
+        placeholder="Ask about Don's work..."
+      ></textarea>
+
+      <button
+        type="submit"
+        id="aiChatSend"
+        class="ai-chat-send"
+      >
+        Send
+      </button>
+
+    </form>
+
+  </div>
+
+
+  <button
+    type="button"
+    class="ai-chat-toggle"
+    id="aiChatToggle"
+  >
+    <span>✦</span>
+    Ask Don's AI
+  </button>
+
+</div>
+
   <!-- Scripts -->
   <script src="js/main.js"></script>
 </body>
