@@ -116,3 +116,408 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+/* ═══════════════════════════════════════════════════════
+   PORTFOLIO AI CHATBOT
+   ═══════════════════════════════════════════════════════ */
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  const WORKER_URL =
+    'https://esmeraldo-portfolio-ai.esmeraldoinciso-main.workers.dev';
+
+
+  const chat =
+    document.getElementById('aiChat');
+
+  const toggle =
+    document.getElementById('aiChatToggle');
+
+  const closeButton =
+    document.getElementById('aiChatClose');
+
+  const form =
+    document.getElementById('aiChatForm');
+
+  const input =
+    document.getElementById('aiChatInput');
+
+  const sendButton =
+    document.getElementById('aiChatSend');
+
+  const messages =
+    document.getElementById('aiChatMessages');
+
+
+  /*
+   * Stop if chatbot HTML does not exist.
+   */
+
+  if (
+    !chat ||
+    !toggle ||
+    !closeButton ||
+    !form ||
+    !input ||
+    !sendButton ||
+    !messages
+  ) {
+
+    console.error(
+      'AI Chatbot: HTML elements not found.'
+    );
+
+    return;
+
+  }
+
+
+  /* ─── Open Chat ─── */
+
+  function openChat() {
+
+    chat.classList.add('open');
+
+    setTimeout(() => {
+      input.focus();
+    }, 200);
+
+  }
+
+
+  /* ─── Close Chat ─── */
+
+  function closeChat() {
+
+    chat.classList.remove('open');
+
+  }
+
+
+  toggle.addEventListener(
+    'click',
+    openChat
+  );
+
+
+  closeButton.addEventListener(
+    'click',
+    closeChat
+  );
+
+
+  /* ─── Add Message ─── */
+
+  function addMessage(
+    text,
+    type
+  ) {
+
+    const message =
+      document.createElement('div');
+
+    message.className =
+      `ai-message ${type}`;
+
+
+    const label =
+      document.createElement('div');
+
+    label.className =
+      'ai-message-label';
+
+    label.textContent =
+      type === 'ai-user-message'
+        ? 'YOU'
+        : 'DON.AI';
+
+
+    const bubble =
+      document.createElement('div');
+
+    bubble.className =
+      'ai-message-bubble';
+
+
+    /*
+     * textContent is safer than innerHTML.
+     */
+
+    bubble.textContent = text;
+
+
+    message.appendChild(label);
+
+    message.appendChild(bubble);
+
+
+    messages.appendChild(message);
+
+
+    messages.scrollTop =
+      messages.scrollHeight;
+
+
+    return message;
+
+  }
+
+
+  /* ─── Thinking ─── */
+
+  function addThinking() {
+
+    const message =
+      document.createElement('div');
+
+
+    message.className =
+      'ai-message ai-bot-message';
+
+
+    const label =
+      document.createElement('div');
+
+    label.className =
+      'ai-message-label';
+
+    label.textContent =
+      'DON.AI';
+
+
+    const thinking =
+      document.createElement('div');
+
+    thinking.className =
+      'ai-thinking';
+
+
+    for (
+      let i = 0;
+      i < 3;
+      i++
+    ) {
+
+      const dot =
+        document.createElement('span');
+
+      thinking.appendChild(dot);
+
+    }
+
+
+    message.appendChild(label);
+
+    message.appendChild(thinking);
+
+
+    messages.appendChild(message);
+
+
+    messages.scrollTop =
+      messages.scrollHeight;
+
+
+    return message;
+
+  }
+
+
+  /* ─── Send Message ─── */
+
+  form.addEventListener(
+    'submit',
+
+    async (event) => {
+
+      /*
+       * THIS PREVENTS THE PAGE RELOAD.
+       */
+
+      event.preventDefault();
+
+
+      const userMessage =
+        input.value.trim();
+
+
+      if (!userMessage) {
+
+        return;
+
+      }
+
+
+      /*
+       * Prevent multiple requests.
+       */
+
+      if (sendButton.disabled) {
+
+        return;
+
+      }
+
+
+      addMessage(
+        userMessage,
+        'ai-user-message'
+      );
+
+
+      input.value = '';
+
+
+      sendButton.disabled = true;
+
+      input.disabled = true;
+
+
+      const thinkingMessage =
+        addThinking();
+
+
+      try {
+
+        const response =
+          await fetch(
+            WORKER_URL,
+            {
+
+              method: 'POST',
+
+              headers: {
+                'Content-Type':
+                  'application/json'
+              },
+
+              body:
+                JSON.stringify({
+                  message: userMessage
+                })
+
+            }
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            `HTTP error: ${response.status}`
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        thinkingMessage.remove();
+
+
+        if (
+          data.response
+        ) {
+
+          addMessage(
+            data.response,
+            'ai-bot-message'
+          );
+
+        } else {
+
+          addMessage(
+            "Sorry, I couldn't generate a response.",
+            'ai-bot-message'
+          );
+
+        }
+
+
+      } catch (error) {
+
+        console.error(
+          'AI Chatbot Error:',
+          error
+        );
+
+
+        thinkingMessage.remove();
+
+
+        addMessage(
+          "Sorry, I'm temporarily unavailable. Please try again in a moment.",
+          'ai-bot-message'
+        );
+
+      }
+
+
+      sendButton.disabled = false;
+
+      input.disabled = false;
+
+
+      input.focus();
+
+    }
+
+  );
+
+
+  /* ─── Enter to Send ─── */
+
+  input.addEventListener(
+    'keydown',
+
+    (event) => {
+
+      if (
+        event.key === 'Enter' &&
+        !event.shiftKey
+      ) {
+
+        event.preventDefault();
+
+
+        /*
+         * Manually trigger submit.
+         */
+
+        form.dispatchEvent(
+          new Event(
+            'submit',
+            {
+              bubbles: true,
+              cancelable: true
+            }
+          )
+        );
+
+      }
+
+    }
+
+  );
+
+
+  /* ─── Escape to Close ─── */
+
+  document.addEventListener(
+    'keydown',
+
+    (event) => {
+
+      if (
+        event.key === 'Escape'
+      ) {
+
+        closeChat();
+
+      }
+
+    }
+
+  );
+
+});
